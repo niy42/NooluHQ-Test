@@ -92,7 +92,7 @@ export async function verifyEmail(req: Request, res: Response) {
     const onboardingToken = jwt.sign(
       { id: user.id, email: user.email, purpose: "onboarding" },
       process.env.JWT_SECRET!,
-      { expiresIn: "2h" },
+      { expiresIn: "24h" },
     );
 
     const updatedCompletedSteps = user.completedSteps || [];

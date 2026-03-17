@@ -55,7 +55,9 @@ export const authenticateOnboarding = (
     console.error("[AUTH] Verify failed:", err.name, err.message);
 
     if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Onboarding session expired" });
+      return res
+        .status(401)
+        .json({ message: "Session expired. Please restart onboarding." });
     }
 
     return res.status(401).json({ message: "Invalid onboarding token" });

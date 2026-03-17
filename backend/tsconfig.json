@@ -1,0 +1,13 @@
+{
+  "include": ["src/**/*", "src/types/**/*.d.ts", "types/**/*.d.ts"],
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "verbatimModuleSyntax": false,
+    "typeRoots": ["./node_modules/@types", "./src/types", "./types"]
+  }
+}

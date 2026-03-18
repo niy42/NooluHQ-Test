@@ -13,6 +13,7 @@ export interface SignupRequest {
 export interface SignupResponse {
   status: string;
   message: string;
+  onboardingToken?: string;
   user: User;
 }
 

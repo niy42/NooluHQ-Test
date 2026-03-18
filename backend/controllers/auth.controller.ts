@@ -16,7 +16,7 @@ export async function signup(req: Request, res: Response) {
 
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-  await User.create({
+  const newUser = await User.create({
     email,
     password: hashed,
     verificationToken: otp,
@@ -48,7 +48,16 @@ export async function signup(req: Request, res: Response) {
     console.error("Email failed:", err);
   }
 
-  res.json({ message: "Check your email for a 6-digit verification code" });
+  const onboardingToken = jwt.sign(
+    { id: newUser.id, email: newUser.email, purpose: "onboarding" },
+    process.env.JWT_SECRET!,
+    { expiresIn: "24h" },
+  );
+
+  res.json({
+    message: "Check your email for a 6-digit verification code",
+    onboardingToken,
+  });
 }
 export async function verifyEmail(req: Request, res: Response) {
   try {
@@ -94,7 +103,7 @@ export async function verifyEmail(req: Request, res: Response) {
       process.env.JWT_SECRET!,
       { expiresIn: "24h" },
     );
-
+    console.log("[VERIFY EMAIL] NEW TOKEN:", onboardingToken);
     const updatedCompletedSteps = user.completedSteps || [];
     const totalSteps = 4;
 

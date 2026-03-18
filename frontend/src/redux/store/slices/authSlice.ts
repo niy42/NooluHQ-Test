@@ -58,6 +58,7 @@ const authSlice = createSlice({
         token: action.payload,
         timestamp,
       };
+      state.accessToken = null;
     },
 
     refreshAccessToken: (

@@ -2,31 +2,23 @@ import { useOnboardingProgress } from "@/utils/hooks/useOnboardingProgress/useOn
 import classNames from "classnames";
 import { Check } from "lucide-react";
 import { steps } from "../constants";
-import { useAppSelector } from "@/redux/store/hooks";
-import { selectOnboardingProgress } from "@/redux/store/slices/authSlice";
+// import { useAppSelector } from "@/redux/store/hooks";
+// import { selectOnboardingProgress } from "@/redux/store/slices/authSlice";
 
 export default function StepIndicator() {
-  const { data, isLoading, error } = useOnboardingProgress();
-  const progress = useAppSelector(selectOnboardingProgress) ?? data?.progress;
+  const { progress, isLoading, error } = useOnboardingProgress();
 
-  const completedSteps = (() => {
-    if (!progress?.completedSteps) return [];
-    if (Array.isArray(progress.completedSteps)) return progress.completedSteps;
-    try {
-      return JSON.parse(progress.completedSteps);
-    } catch {
-      return [];
-    }
-  })();
-
-  const completedSet = new Set(completedSteps.map((s: any) => Number(s)));
+  const completedSteps = progress?.completedSteps ?? [];
+  const completedSet = new Set(completedSteps.map((s) => Number(s)));
   const currentStep = progress?.currentStep ?? 1;
+
+  console.log("Current step: ", currentStep);
 
   if (isLoading) {
     return <div className="text-gray-500">Loading progress...</div>;
   }
 
-  if (error || !data?.success) {
+  if (error) {
     return <div className="text-red-500">Failed to load progress</div>;
   }
 
@@ -35,7 +27,7 @@ export default function StepIndicator() {
       {steps.map((step, index) => {
         const stepNumber = index + 1;
         const isCompleted = completedSet.has(stepNumber);
-        const isActive = stepNumber === currentStep;
+        const isActive = stepNumber === Math.min(currentStep, steps.length);
         const isFuture = stepNumber > currentStep;
         const last = index === steps.length - 1;
 
@@ -55,9 +47,10 @@ export default function StepIndicator() {
             <div className="flex flex-col items-center">
               <div
                 className={classNames(
-                  "flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition",
+                  "flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-all duration-300 ease-in-out",
                   {
-                    "bg-indigo-500 text-white": isActive || isCompleted,
+                    "bg-indigo-500 text-white": isCompleted || isActive,
+                    "scale-110": isActive,
                     "border border-gray-300 text-gray-500": isFuture,
                   },
                 )}
@@ -69,7 +62,7 @@ export default function StepIndicator() {
                 <div className="relative my-2 h-8 w-px bg-gray-300">
                   <div
                     className={classNames(
-                      "absolute top-0 left-0 w-full bg-indigo-500 transition-all duration-300",
+                      "absolute top-0 left-0 w-full bg-indigo-500 transition-all duration-500 ease-in-out",
                       {
                         "h-full": isCompleted,
                         "h-0": !isCompleted,
@@ -82,8 +75,8 @@ export default function StepIndicator() {
 
             <div className="pt-1">
               <p
-                className={classNames("text-sm transition", {
-                  "font-medium text-indigo-500": isActive,
+                className={classNames("text-sm transition-all duration-300", {
+                  "translate-x-1 font-medium text-indigo-500": isActive,
                   "text-gray-400": isFuture,
                   "text-gray-600": isCompleted && !isActive,
                 })}

@@ -1,6 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useMutationService } from "../Tanstack/useMutationService";
 import { authServices } from "@/services/auth.services";
+import { setOnboardingToken } from "@/redux/store/slices/authSlice";
 
 export interface RegisterFormValues {
   name: string;
@@ -20,15 +21,20 @@ export function useRegister() {
   });
   const password = watch("password");
 
-  // In useRegister.ts (or wherever you call useMutationService)
   const registerUser = useMutationService({
     service: authServices.signup,
     options: {
       successTitle: "Registration Successful",
       successMessage: "Your account has been created",
       redirectTo: "/verify-email",
-      onSuccess: (_response, helpers) => {
+      onSuccess: (response, helpers) => {
         const { navigate, variables } = helpers;
+        if (!response?.onboardingToken) {
+          console.warn("No onboarding token received from signup");
+          return;
+        }
+        const { onboardingToken } = response;
+        helpers.dispatch(setOnboardingToken(onboardingToken));
         if (variables) {
           navigate("/verify-email", {
             state: { email: variables.email },

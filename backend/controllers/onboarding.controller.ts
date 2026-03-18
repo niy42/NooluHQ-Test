@@ -24,9 +24,9 @@ export async function saveWhoIsJoining(req: Request, res: Response) {
     user.role = role?.trim() || user.role;
     user.teamSize = teamSize || user.teamSize;
 
-    const thisStep = 2;
-    if (!user.completedSteps.includes(thisStep)) {
-      user.completedSteps = [...user.completedSteps, thisStep];
+    const stepJustCompleted = 2;
+    if (!user.completedSteps.includes(stepJustCompleted)) {
+      user.completedSteps = [...user.completedSteps, stepJustCompleted];
     }
     user.currentStep = 3;
 
@@ -62,14 +62,7 @@ export async function getUserProgress(req: Request, res: Response) {
     const userId = (req as any).user?.id;
     console.log("[PROGRESS] req.user:", (req as any).user);
 
-    let progressData: {
-      currentStep: number;
-      completedSteps: number[];
-      onboardingComplete: boolean;
-      totalSteps: number;
-      percentage: number;
-      isComplete: boolean;
-    } = {
+    let progress = {
       currentStep: 1,
       completedSteps: [],
       onboardingComplete: false,
@@ -79,37 +72,29 @@ export async function getUserProgress(req: Request, res: Response) {
     };
 
     if (userId) {
-      console.log(`[PROGRESS] Token userId: ${userId}`);
-      const user = await User.findByPk(userId, { raw: true });
-      console.log(
-        `[PROGRESS] DB userId: ${user?.id ?? "not found"}, currentStep: ${user?.currentStep ?? "N/A"}`,
-      );
-      // const user = await User.findByPk(userId, {
-      //   attributes: ["currentStep", "completedSteps", "onboardingComplete"],
-      // });
-
+      const user = await User.findByPk(userId);
       if (user) {
-        const completedCount = user.completedSteps?.length || 0;
-        progressData = {
-          currentStep: user.currentStep,
-          completedSteps: user.completedSteps || [],
-          onboardingComplete: user.onboardingComplete,
+        const completedSteps = Array.isArray(user.completedSteps)
+          ? user.completedSteps.map((s) => Number(s))
+          : JSON.parse(user.completedSteps || "[]");
+
+        progress = {
+          currentStep: Number(user.currentStep) || 1,
+          completedSteps,
+          onboardingComplete: Boolean(user.onboardingComplete),
           totalSteps: 4,
-          percentage: Math.round((completedCount / 4) * 100),
-          isComplete: user.onboardingComplete,
+          percentage: Math.min(
+            Math.round((completedSteps.length / 4) * 100),
+            100,
+          ),
+          isComplete: Boolean(user.onboardingComplete),
         };
       }
     }
 
-    res.status(200).json({
-      success: true,
-      progress: progressData,
-    });
-  } catch (error) {
-    console.error("Error fetching progress:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch progress",
-    });
+    res.status(200).json({ success: true, progress });
+  } catch (err) {
+    console.error("Error fetching progress:", err);
+    res.status(500).json({ success: false, error: "Failed to fetch progress" });
   }
 }

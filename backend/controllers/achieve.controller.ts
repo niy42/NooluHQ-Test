@@ -28,38 +28,25 @@ export async function saveAchievement(req: Request, res: Response) {
     user.goal = goal;
     user.goalDescription = description;
 
-    const thisStep = 4;
+    // const thisStep = 4;
 
-    if (!user.completedSteps.includes(thisStep)) {
-      user.completedSteps = [...user.completedSteps, thisStep];
-    }
+    // if (!user.completedSteps.includes(thisStep)) {
+    //   user.completedSteps = [...user.completedSteps, thisStep];
+    // }
 
-    user.currentStep = 5;
+    // user.currentStep = 5;
 
-    if (user.currentStep > 4) {
-      user.onboardingComplete = true;
-    }
+    // if (user.currentStep > 4) {
+    //   user.onboardingComplete = true;
+    // }
 
     await user.save();
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
 
-    const updatedCompletedSteps = user?.completedSteps || [];
-    const totalSteps = 4;
-
-    const progress = {
-      currentStep: user.currentStep,
-      completedSteps: updatedCompletedSteps,
-      onboardingComplete: user.onboardingComplete,
-      totalSteps,
-      percentage: Math.round((updatedCompletedSteps.length / totalSteps) * 100),
-      isComplete: user.onboardingComplete,
-    };
-
     res.json({
       message: "Achievement saved successfully",
-      progress,
       user,
       accessToken,
       refreshToken,

@@ -12,9 +12,9 @@ export default function VerifyEmail() {
     control,
     handleSubmit,
     onSubmit,
-    isPending,
     isResending,
-    resendMutation,
+    isVerifying,
+    isVerifySuccess,
     resendCode,
   } = useVerify(email);
 
@@ -47,11 +47,11 @@ export default function VerifyEmail() {
   }, [countdown]);
 
   useEffect(() => {
-    if (resendMutation.isSuccess) {
+    if (isVerifySuccess) {
       setCountdown(60);
       setCanResend(false);
     }
-  }, [resendMutation.isSuccess]);
+  }, [isVerifySuccess]);
 
   return (
     <div className="w-full max-w-160">
@@ -173,12 +173,12 @@ export default function VerifyEmail() {
 
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isVerifying}
           className={`w-full cursor-pointer rounded-sm bg-linear-to-r from-indigo-500 to-indigo-600 py-3 font-medium text-white transition hover:opacity-95 ${
-            isPending ? "cursor-not-allowed opacity-70" : ""
+            isVerifying ? "cursor-not-allowed opacity-70" : ""
           }`}
         >
-          {isPending ? "Verifying..." : "Verify"}
+          {isVerifying ? "Verifying..." : "Verify"}
         </button>
       </form>
     </div>

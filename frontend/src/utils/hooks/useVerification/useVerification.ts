@@ -6,16 +6,19 @@ import {
   setOnboardingProgress,
   setOnboardingToken,
 } from "@/redux/store/slices/authSlice";
+import {
+  defaultProgress,
+  useOnboardingProgress,
+} from "../useOnboardingProgress/useOnboardingProgress";
 
 export interface VerifyFormValues {
   code: string;
 }
 
-export function useVerify(email?: string) {
+export function useVerify(email: string) {
+  const { advanceStep } = useOnboardingProgress();
   const { control, handleSubmit, setValue, reset } = useForm<VerifyFormValues>({
-    defaultValues: {
-      code: "",
-    },
+    defaultValues: { code: "" },
   });
 
   const verifyUser = useMutationService({
@@ -23,26 +26,65 @@ export function useVerify(email?: string) {
     options: {
       successTitle: "Verification Successful",
       successMessage: "Your email has been verified",
-      // redirectTo: "/join-us",
       onSuccess: (response: any, helper) => {
         const { onboardingToken, progress } = response;
         helper.dispatch(setOnboardingToken(onboardingToken));
         helper.dispatch(setOnboardingProgress(progress));
-        helper.queryClient.setQueryData(["onboarding-progress"], {
-          success: true,
-          progress,
-        });
         helper.navigate("/join-us");
         reset();
       },
+      optimisticUpdate: {
+        queryKey: ["onboarding-progress"],
+        updateFn: (oldData, _variables) => {
+          if (!oldData?.progress) {
+            return {
+              success: true,
+              progress: {
+                ...defaultProgress,
+                currentStep: 3,
+                completedSteps: [...defaultProgress.completedSteps, 2],
+                percentage: Math.min(
+                  Math.round(
+                    ((defaultProgress.completedSteps.length + 1) /
+                      defaultProgress.totalSteps) *
+                      100,
+                  ),
+                  100,
+                ),
+              },
+            };
+          }
+
+          const prevProgress = oldData.progress;
+          const stepCompleted = 1;
+
+          const updatedCompleted = prevProgress.completedSteps.includes(
+            stepCompleted,
+          )
+            ? prevProgress.completedSteps
+            : [...prevProgress.completedSteps, stepCompleted];
+
+          const newProgress = {
+            ...prevProgress,
+            currentStep: stepCompleted + 1,
+            completedSteps: updatedCompleted,
+            percentage: Math.min(
+              Math.round(
+                (updatedCompleted.length / prevProgress.totalSteps) * 100,
+              ),
+              100,
+            ),
+          };
+
+          return {
+            ...oldData,
+            progress: newProgress,
+          };
+        },
+      },
+      invalidateKeys: ["onboarding-progress"],
     },
   });
-
-  const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
-    verifyUser.mutate({
-      code: data.code,
-    });
-  };
 
   const resendMutation = useMutationService({
     service: authServices.resendVerification,
@@ -51,6 +93,15 @@ export function useVerify(email?: string) {
       successMessage: "A new verification code has been sent",
     },
   });
+
+  const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
+    if (verifyUser.isPending) return;
+    advanceStep(1);
+    verifyUser.mutate({
+      code: data.code,
+      email,
+    });
+  };
 
   const setCode = (newCode: string) => {
     setValue("code", newCode, { shouldValidate: true });
@@ -61,16 +112,14 @@ export function useVerify(email?: string) {
     handleSubmit,
     onSubmit,
     setCode,
-    ...verifyUser,
-    resendMutation,
-    resendCode: () => {
-      if (!email) {
-        console.warn("Email not available for resend");
-        return;
-      }
-      resendMutation.mutate({ email });
-    },
+
+    verify: verifyUser.mutate,
+    isVerifying: verifyUser.isPending,
+    verifyError: verifyUser.error,
+
+    resendCode: () => resendMutation.mutate({ email }),
     isResending: resendMutation.isPending,
+    isVerifySuccess: resendMutation.isSuccess,
     resendError: resendMutation.error,
   };
 }

@@ -73,9 +73,6 @@ class ApiClient {
     );
   }
 
-  /**
-   * Main request method – returns the unwrapped response.data
-   */
   async request<Req = unknown, Resp = unknown>(
     config: RequestConfig<Req>,
   ): Promise<Resp> {
@@ -98,9 +95,8 @@ class ApiClient {
 
     try {
       const response = await this.http.request<Resp>(axiosRequestConfig);
-      return response.data; // ← always return .data (unwrapped)
+      return response.data;
     } catch (err: any) {
-      // Re-throw with better context if needed
       throw err;
     }
   }

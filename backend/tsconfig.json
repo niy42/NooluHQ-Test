@@ -1,5 +1,10 @@
 {
-  "include": ["src/**/*", "src/types/**/*.d.ts", "types/**/*.d.ts"],
+  "include": [
+    "src/**/*",
+    "src/types/**/*.d.ts",
+    "types/**/*.d.ts",
+    "server.ts"
+  ],
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
@@ -8,6 +13,9 @@
     "skipLibCheck": true,
     "strict": true,
     "verbatimModuleSyntax": false,
-    "typeRoots": ["./node_modules/@types", "./src/types", "./types"]
+    "typeRoots": ["./node_modules/@types", "./src/types", "./types"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "resolveJsonModule": true
   }
 }

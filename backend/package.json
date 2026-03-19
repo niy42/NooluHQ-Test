@@ -1,8 +1,8 @@
 {
   "scripts": {
     "dev": "nodemon --ext ts,json --exec \"node --env-file=.env -r ts-node/register server.ts\"",
-    "start": "node --env-file=.env -r ts-node/register server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

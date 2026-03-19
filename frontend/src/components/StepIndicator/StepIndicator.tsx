@@ -10,7 +10,7 @@ export default function StepIndicator() {
   const completedSet = new Set(completedSteps.map((s) => Number(s)));
   const currentStep = progress?.currentStep ?? 1;
 
-  console.log("Current step: ", currentStep);
+  // console.log("Current step: ", currentStep);
 
   if (isLoading) {
     return <div className="text-gray-500">Loading progress...</div>;

@@ -9,20 +9,17 @@ export async function sendEmail(to: string, subject: string, html: string) {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
-    // Optional but helpful for debugging
     // logger: true,
     // debug: true,
   });
-
-  // Optional: Verify connection once at startup (good practice)
-  // await transporter.verify(); // uncomment to test connection on server start
+  await transporter.verify();
 
   const mailOptions = {
     from: '"Diag App" <dennisraynex@gmail.com>',
     to,
     subject,
     html,
-    // Optional: replyTo: "support@yourdomain.com",
+    replyTo: "dennisraynex@gmail.com",
   };
 
   try {

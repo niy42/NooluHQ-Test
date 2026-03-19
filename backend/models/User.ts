@@ -65,8 +65,7 @@ User.init(
     completedSteps: {
       type: DataTypes.JSON,
       allowNull: false,
-      defaultValue: [], // ← Sequelize will stringify [] → '[]'
-      // Optional: get/set to make it behave like an array in JS
+      defaultValue: [],
       get() {
         const value = this.getDataValue("completedSteps");
         return value ? JSON.parse(value) : [];

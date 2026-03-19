@@ -26,7 +26,6 @@ export async function login(req: Request, res: Response) {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
 
-  // Optional: send login notification email
   try {
     await sendEmail(
       email,

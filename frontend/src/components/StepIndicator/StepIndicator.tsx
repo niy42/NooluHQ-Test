@@ -2,8 +2,6 @@ import { useOnboardingProgress } from "@/utils/hooks/useOnboardingProgress/useOn
 import classNames from "classnames";
 import { Check } from "lucide-react";
 import { steps } from "../constants";
-// import { useAppSelector } from "@/redux/store/hooks";
-// import { selectOnboardingProgress } from "@/redux/store/slices/authSlice";
 
 export default function StepIndicator() {
   const { progress, isLoading, error } = useOnboardingProgress();
@@ -12,7 +10,7 @@ export default function StepIndicator() {
   const completedSet = new Set(completedSteps.map((s) => Number(s)));
   const currentStep = progress?.currentStep ?? 1;
 
-  console.log("Current step: ", currentStep);
+  // console.log("Current step: ", currentStep);
 
   if (isLoading) {
     return <div className="text-gray-500">Loading progress...</div>;

@@ -31,6 +31,7 @@ app.use("/api/v1/progress", ProgressRoutes);
 app.get("/", (req, res) => {
   res.send("Backend is live");
 });
+app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);

@@ -50,6 +50,13 @@ async function startServer() {
 
     app.listen(PORT, () => {
       console.log(`Backend running on port ${PORT}`);
+      console.log(
+        `- Public URL: ${process.env.RAILWAY_STATIC_URL || "Check Railway dashboard"}`,
+      );
+      console.log(`- Listening on port: ${PORT}`);
+      console.log(
+        `- Database connected: ${process.env.DATABASE_URL?.slice(0, 30)}...`,
+      );
     });
   } catch (err) {
     console.error("Failed to start server:", err);

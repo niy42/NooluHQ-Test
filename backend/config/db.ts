@@ -1,9 +1,10 @@
 import { Sequelize } from "sequelize";
 
 export const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "./data.sqlite",
+  dialect: "postgres",
   logging: false,
+  // dialect: "sqlite",
+  // storage: "./data.sqlite",
 });
 
 export async function connectDb() {

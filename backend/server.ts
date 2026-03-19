@@ -12,6 +12,7 @@ import ProgressRoutes from "./routes/progress.route";
 import "./models";
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
 app.use(
   cors({
@@ -38,13 +39,13 @@ async function startServer() {
     await connectDb();
     await sequelize.sync({
       alter: true,
-      force: true,
-      logging: console.log,
+      // force: true,
+      // logging: console.log,
     });
     console.log("Database synced - tables created/updated");
 
-    app.listen(4000, () => {
-      console.log("Backend running at http://localhost:4000");
+    app.listen(PORT, () => {
+      console.log(`Backend running on port ${PORT}`);
     });
   } catch (err) {
     console.error("Failed to start server:", err);

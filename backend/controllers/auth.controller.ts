@@ -5,6 +5,50 @@ import { sendEmail } from "../utils/sendEmail";
 import { generateOtp } from "../utils/generateOtp";
 import jwt from "jsonwebtoken";
 
+export async function login(req: Request, res: Response) {
+  const { email, password } = req.body;
+
+  // 1. Check if user exists
+  const user = await User.findOne({ where: { email } });
+  if (!user)
+    return res.status(400).json({ error: "Invalid email or password" });
+
+  // 2. Verify password
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword)
+    return res.status(400).json({ error: "Invalid email or password" });
+
+  // 3. Optional: check if email is verified
+  if (!user.onboardingComplete) {
+    return res.status(403).json({
+      error: "Email not verified. Complete onboarding first.",
+    });
+  }
+
+  // 4. Generate auth token
+  const authToken = jwt.sign(
+    { id: user.id, email: user.email, purpose: "auth" },
+    process.env.JWT_SECRET!,
+    { expiresIn: "24h" },
+  );
+
+  // 5. Optional: send login notification email
+  // try {
+  //   await sendEmail(
+  //     email,
+  //     "Login Alert - Diag App",
+  //     `<p>You just logged in to your account.</p>`
+  //   );
+  // } catch (err) {
+  //   console.error("Email failed:", err);
+  // }
+
+  res.json({
+    message: "Login successful",
+    authToken,
+  });
+}
+
 export async function signup(req: Request, res: Response) {
   const { email, password } = req.body;
 
@@ -59,6 +103,7 @@ export async function signup(req: Request, res: Response) {
     onboardingToken,
   });
 }
+
 export async function verifyEmail(req: Request, res: Response) {
   try {
     const { code } = req.body;

@@ -2,8 +2,6 @@ import { useOnboardingProgress } from "@/utils/hooks/useOnboardingProgress/useOn
 import classNames from "classnames";
 import { Check } from "lucide-react";
 import { steps } from "../constants";
-// import { useAppSelector } from "@/redux/store/hooks";
-// import { selectOnboardingProgress } from "@/redux/store/slices/authSlice";
 
 export default function StepIndicator() {
   const { progress, isLoading, error } = useOnboardingProgress();

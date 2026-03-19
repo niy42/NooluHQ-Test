@@ -8,6 +8,11 @@ import SignupForm from "@/pages/auth/Signup/Signup";
 import VerifyEmail from "@/pages/auth/VerifyEmail/VerifyEmail";
 import CreateWorkspace from "@/pages/auth/CreateWorkspace/CreateWorkspace";
 import InviteTeammates from "@/pages/auth/InviteTeam/InviteTeam";
+import Analytics from "@/pages/analytics/analytics";
+import Settings from "@/pages/settings/settings";
+import Integrations from "@/pages/integrations/integrations";
+import Reports from "@/pages/reports/reports";
+import Users from "@/pages/users/users";
 
 export default function Router() {
   return (
@@ -25,6 +30,11 @@ export default function Router() {
 
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="integrations" element={<Integrations />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="users" element={<Users />} />
         </Route>
       </Routes>
     </BrowserRouter>

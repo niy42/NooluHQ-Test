@@ -2,10 +2,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useMutationService } from "../Tanstack/useMutationService";
 import { onboardingServices } from "@/services/onboarding.services";
-import {
-  defaultProgress,
-  useOnboardingProgress,
-} from "../useOnboardingProgress/useOnboardingProgress";
+import { defaultProgress } from "../useOnboardingProgress/useOnboardingProgress";
 
 type FormValues = {
   name: string;
@@ -14,7 +11,6 @@ type FormValues = {
 };
 
 export function useWhoIsJoining() {
-  const { advanceStep } = useOnboardingProgress();
   const { control, handleSubmit, watch, reset, register } = useForm<FormValues>(
     {
       defaultValues: {
@@ -97,8 +93,6 @@ export function useWhoIsJoining() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (saveProfile.isPending) return;
-
-    advanceStep(2);
     saveProfile.mutate(data);
   };
 

@@ -2,11 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { API_URL } from "@/config/env";
 import { store } from "@/redux/store";
 import { ApiMethods } from "./apiMethod";
-import { selectAuthToken } from "@/redux/store/slices/authSlice";
-
-// ────────────────────────────────────────────────
-// Type Definitions
-// ────────────────────────────────────────────────
+import { logoutUser, selectAuthToken } from "@/redux/store/slices/authSlice";
 
 export interface RequestConfig<T = unknown> {
   path: string;
@@ -25,10 +21,6 @@ export interface RequestConfig<T = unknown> {
   };
 }
 
-// ────────────────────────────────────────────────
-// ApiClient Class
-// ────────────────────────────────────────────────
-
 class ApiClient {
   private http: AxiosInstance;
 
@@ -39,14 +31,13 @@ class ApiClient {
         Accept: "application/json",
         "Cache-Control": "no-cache",
       },
-      timeout: 30000, // optional: prevent hanging requests
+      timeout: 30000,
     });
 
     this.initializeInterceptors();
   }
 
   private initializeInterceptors() {
-    // ─── Request interceptor ───
     this.http.interceptors.request.use((config) => {
       const token = selectAuthToken(store.getState());
       if (token) {
@@ -54,20 +45,14 @@ class ApiClient {
       }
       return config;
     });
-
-    // ─── Response interceptor ───
     this.http.interceptors.response.use(
       (response) => response,
       (error) => {
-        // Handle 401 globally (can be extended later for logout / refresh)
         if (error.response?.status === 401) {
           console.warn("[API] Unauthorized - token may be invalid or expired");
-
-          // Optional: you could dispatch a logout action here in the future
-          // store.dispatch(logout());
+          store.dispatch(logoutUser());
+          window.location.href = "/signup";
         }
-
-        // Return the error payload consistently (most backends return { message, error })
         return Promise.reject(error.response?.data || error.message || error);
       },
     );
@@ -82,7 +67,6 @@ class ApiClient {
 
     const { options, ...axiosConfig } = config;
 
-    // Build Axios-compatible config
     const axiosRequestConfig: AxiosRequestConfig = {
       url: axiosConfig.path,
       method: axiosConfig.method,

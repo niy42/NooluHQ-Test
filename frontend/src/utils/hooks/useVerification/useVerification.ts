@@ -6,17 +6,13 @@ import {
   setOnboardingProgress,
   setOnboardingToken,
 } from "@/redux/store/slices/authSlice";
-import {
-  defaultProgress,
-  useOnboardingProgress,
-} from "../useOnboardingProgress/useOnboardingProgress";
+import { defaultProgress } from "../useOnboardingProgress/useOnboardingProgress";
 
 export interface VerifyFormValues {
   code: string;
 }
 
 export function useVerify(email: string) {
-  const { advanceStep } = useOnboardingProgress();
   const { control, handleSubmit, setValue, reset } = useForm<VerifyFormValues>({
     defaultValues: { code: "" },
   });
@@ -96,7 +92,6 @@ export function useVerify(email: string) {
 
   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
     if (verifyUser.isPending) return;
-    advanceStep(1);
     verifyUser.mutate({
       code: data.code,
       email,

@@ -1,11 +1,15 @@
-const Dashboard = () => {
-  return (
-    <>
-      <div className="mx-auto flex w-full items-center">
-        <span>Welcome to dashboard</span>
-      </div>
-    </>
-  );
-};
+import ChartsSection from "./components/ChartsSection/ChartsSection";
+import LatestSignups from "./components/LatestSignups/LatestSignups";
+import StatsCards from "./components/StatsCard/StatsCard";
+import WelcomeHeader from "./components/WelcomeHeader/WelcomHeader";
 
-export default Dashboard;
+export default function Dashboard() {
+  return (
+    <div className="space-y-16">
+      <WelcomeHeader />
+      <StatsCards />
+      <ChartsSection />
+      <LatestSignups />
+    </div>
+  );
+}

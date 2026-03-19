@@ -1,17 +1,13 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useMutationService } from "../Tanstack/useMutationService";
 import { inviteServices } from "@/services/invite.services";
-import {
-  defaultProgress,
-  useOnboardingProgress,
-} from "../useOnboardingProgress/useOnboardingProgress";
+import { defaultProgress } from "../useOnboardingProgress/useOnboardingProgress";
 
 type FormValues = {
   email: string[];
 };
 
 export function useInvite({ workspaceId }: { workspaceId: string }) {
-  const { advanceStep } = useOnboardingProgress();
   const { control, handleSubmit, watch, reset, register, formState } =
     useForm<FormValues>({ defaultValues: { email: [] } });
 
@@ -85,8 +81,6 @@ export function useInvite({ workspaceId }: { workspaceId: string }) {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const payload = Array.isArray(data.email) ? data.email : [data.email];
-    advanceStep(3);
-
     sendInvites.mutate({ invite: payload, workspaceId });
   };
 

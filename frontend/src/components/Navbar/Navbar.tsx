@@ -1,33 +1,50 @@
-import { useAppDispatch } from "@/redux/store/hooks";
-import { logoutUser } from "@/redux/store/slices/authSlice";
+import { persistor } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
+import { logoutUser, selectCurrentUser } from "@/redux/store/slices/authSlice";
+import { Search } from "lucide-react";
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectCurrentUser);
 
   function handleLogout() {
     dispatch(logoutUser());
+    persistor.purge();
     navigate("/signup");
     window.location.reload();
   }
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
-      <input
-        type="text"
-        placeholder="Search anything..."
-        className="w-1/3 rounded-lg bg-gray-100 px-4 py-2 outline-none"
-      />
+    <header className="flex items-center justify-between bg-white p-8">
+      <div className="relative w-1/3">
+        <Search className="absolute top-1/2 -left-1 -translate-y-1/2 text-gray-400" />
 
-      <div className="flex items-center gap-4">
-        <Bell className="text-gray-500" />
+        <input
+          type="text"
+          placeholder="Search anything..."
+          className="w-full rounded-lg py-2 pr-4 pl-10 outline-none"
+        />
+      </div>
 
+      <div className="flex items-center">
+        <div className="justify-cehter flex h-10 w-10 items-center rounded-full bg-gray-100 p-4" />
+
+        <Bell className="relative -left-8 cursor-pointer text-gray-500" />
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-purple-500" />
-            <span className="text-sm font-medium">Adebanjo Promise</span>
+            <div className="flex h-12 w-12 items-center rounded-full">
+              <img
+                src="/images/Profile.png"
+                alt="profile-user"
+                className="h-8 w-8 rounded-full"
+              />
+            </div>
+            <span className="text-sm font-medium">
+              {user ? user.name : "User"}
+            </span>
           </div>
 
           <button

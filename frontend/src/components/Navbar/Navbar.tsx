@@ -14,7 +14,6 @@ export default function Navbar() {
     dispatch(logoutUser());
     persistor.purge();
     navigate("/signup");
-    window.location.reload();
   }
 
   return (

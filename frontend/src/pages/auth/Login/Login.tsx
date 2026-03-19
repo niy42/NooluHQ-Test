@@ -3,24 +3,20 @@
 import { Stack } from "@mui/material";
 import { CustomTextField } from "../../../components/TextField/TextField";
 import Google from "../../../assets/svg/google-icon.svg?react";
-import { useRegister } from "@/utils/hooks/useRegistration/useRegistration";
+import { useLogin } from "@/utils/hooks/useLogin/useLogin";
 import { useNavigate } from "react-router-dom";
 
-export default function SignupForm() {
-  const { control, handleSubmit, onSubmit, isPending, password } =
-    useRegister();
+export default function LoginForm() {
+  const { control, handleSubmit, onSubmit, isPending } = useLogin();
   const navigate = useNavigate();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-130 max-w-160">
-      <div className="flex justify-end font-sans text-sm text-gray-400">
-        1/4
-      </div>
       <h2 className="mt-2 text-3xl font-normal tracking-wide text-gray-800">
-        Let&apos;s start with the basics
+        Welcome back
       </h2>
       <p className="mt-4 mb-10 text-sm text-gray-500">
-        Enter your email and set a secure password.
+        Enter your email and password to log in.
       </p>
 
       <Stack spacing={3}>
@@ -36,28 +32,10 @@ export default function SignupForm() {
           control={control}
           name="password"
           type="password"
-          label="Create password"
+          label="Password"
           labelOnTop
-          placeholder="Create your password"
-          rules={{
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters",
-            },
-          }}
-        />
-        <CustomTextField
-          control={control}
-          name="confirmPassword"
-          type="password"
-          label="Confirm password"
-          labelOnTop
-          placeholder="Confirm your password"
-          rules={{
-            required: "Please confirm your password",
-            validate: (value) => value === password || "Passwords do not match",
-          }}
+          placeholder="Your password"
+          rules={{ required: "Password is required" }}
         />
       </Stack>
 
@@ -70,16 +48,16 @@ export default function SignupForm() {
             : "bg-linear-to-r from-indigo-500 to-indigo-600"
         }`}
       >
-        {isPending ? "Creating Account..." : "Create Account"}
+        {isPending ? "Logging in..." : "Log In"}
       </button>
 
       <p className="mt-6 text-center text-sm text-gray-500">
-        Already have an account?{" "}
+        Don&apos;t have an account?{" "}
         <button
           className="cursor-pointer font-medium text-indigo-600"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/signup")}
         >
-          Login
+          Sign up
         </button>
       </p>
 

@@ -5,7 +5,7 @@ import type { User } from "@/redux/store/types";
 const authRoute = "/api/v1/auth";
 
 export interface SignupRequest {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 }

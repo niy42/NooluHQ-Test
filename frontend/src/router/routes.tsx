@@ -13,6 +13,7 @@ import Settings from "@/pages/settings/settings";
 import Integrations from "@/pages/integrations/integrations";
 import Reports from "@/pages/reports/reports";
 import Users from "@/pages/users/users";
+import LoginForm from "@/pages/auth/Login/Login";
 
 export default function Router() {
   return (
@@ -24,6 +25,7 @@ export default function Router() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/create-workspace" element={<CreateWorkspace />} />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/invite-team" element={<InviteTeammates />} />
           <Route path="/achieve" element={<WhatDoYouWantToAchieve />} />
         </Route>

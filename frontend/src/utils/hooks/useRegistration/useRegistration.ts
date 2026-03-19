@@ -19,6 +19,7 @@ export function useRegister() {
       confirmPassword: "",
     },
   });
+
   const password = watch("password");
 
   const registerUser = useMutationService({
@@ -46,7 +47,6 @@ export function useRegister() {
 
   const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
     registerUser.mutate({
-      name: data.name,
       email: data.email,
       password: data.password,
     });

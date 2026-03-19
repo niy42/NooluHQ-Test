@@ -28,18 +28,6 @@ export async function saveAchievement(req: Request, res: Response) {
     user.goal = goal;
     user.goalDescription = description;
 
-    // const thisStep = 4;
-
-    // if (!user.completedSteps.includes(thisStep)) {
-    //   user.completedSteps = [...user.completedSteps, thisStep];
-    // }
-
-    // user.currentStep = 5;
-
-    // if (user.currentStep > 4) {
-    //   user.onboardingComplete = true;
-    // }
-
     await user.save();
 
     const accessToken = generateAccessToken(user.id);

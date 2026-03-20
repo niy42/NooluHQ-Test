@@ -78,19 +78,17 @@ export async function signup(req: Request, res: Response) {
   `;
 
   try {
+    console.log("Before email");
     // await sendEmail(
     //   email,
     //   "Verify Your Diag Account - Your Code Awaits",
     //   emailHtml,
-    // );
-    console.log("Before email");
-    await sendEmail(
-      email,
-      "Verify Your Diag Account - Your Code Awaits",
-      emailHtml,
-    )
-      .then(() => console.log("Email sent"))
-      .catch((err) => console.error("Email failed:", err));
+    // )
+    //   .then(() => console.log("Email sent"))
+    //   .catch((err) => console.error("Email failed:", err));
+
+    await sendEmail(email, emailText, emailHtml);
+
     console.log("After email");
   } catch (err) {
     console.error("Email failed:", err);

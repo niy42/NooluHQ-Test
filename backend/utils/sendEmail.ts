@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-export async function sendEmail(to: string, subject: string, html: string) {
+export async function sendEmailNode(to: string, subject: string, html: string) {
   const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST || "smtp.gmail.com",
     port: Number(process.env.MAIL_PORT) || 587,
@@ -30,4 +31,14 @@ export async function sendEmail(to: string, subject: string, html: string) {
     console.error("Email sending failed:", error);
     throw error;
   }
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+export async function sendEmail(to: string, subject: string, html: string) {
+  return await resend.emails.send({
+    from: "'Diag App' onboarding@diag.com",
+    to,
+    subject,
+    html,
+  });
 }

@@ -1,24 +1,13 @@
-import { authServices } from "@/services/auth.services";
-import { useMutationService } from "./useMutationService";
-
-interface UpdateProfileRequest {
-  name?: string;
-  phone?: string;
-  city?: string;
-}
-
-interface UpdateProfileResponse {
-  user: any;
-  message: string;
-}
+import { useMutationService } from "../Tanstack/useMutationService";
+import { userProfileServices } from "@/services/userProfile.services";
 
 export const useUpdateProfile = () => {
-  return useMutationService<UpdateProfileRequest, UpdateProfileResponse>({
-    service: authServices.userProfile,
+  return useMutationService({
+    service: userProfileServices.userProfile,
     options: {
       optimisticUpdate: {
         queryKey: ["profile"],
-        updateFn: (oldData, variables) => ({
+        updateFn: (oldData, variables: any) => ({
           ...oldData,
           ...variables,
         }),

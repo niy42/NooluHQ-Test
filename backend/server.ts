@@ -55,7 +55,7 @@ async function startServer() {
     await connectDb();
     await sequelize.sync({
       alter: true,
-      // force: true,
+      force: true,
       // logging: console.log,
     });
     console.log("Database synced - tables created/updated");

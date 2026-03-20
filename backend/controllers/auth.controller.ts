@@ -84,7 +84,11 @@ export async function signup(req: Request, res: Response) {
     //   emailHtml,
     // );
     console.log("Before email");
-    sendEmail(email, "Verify Your Diag Account - Your Code Awaits", emailHtml)
+    await sendEmail(
+      email,
+      "Verify Your Diag Account - Your Code Awaits",
+      emailHtml,
+    )
       .then(() => console.log("Email sent"))
       .catch((err) => console.error("Email failed:", err));
     console.log("After email");

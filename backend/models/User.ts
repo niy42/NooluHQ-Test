@@ -17,6 +17,7 @@ export class User extends Model {
   declare goal: string;
   declare goalDescription: string;
   static findByPK: any;
+  static findOne: any;
 }
 
 User.init(

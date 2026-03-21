@@ -49,7 +49,6 @@ const authSlice = createSlice({
         : null;
 
       state.onboardingToken = null;
-
       state.isLoading = false;
     },
 
@@ -60,6 +59,7 @@ const authSlice = createSlice({
         timestamp,
       };
       state.accessToken = null;
+      state.refreshToken = null;
     },
 
     setEmail: (state, action: PayloadAction<string>) => {
@@ -165,10 +165,16 @@ export const selectCompletedSteps = createSelector(
 
 export const selectEmail = createSelector([selectAuth], (auth) => auth.email);
 
-// Returns the most appropriate token to use right now
+// export const selectAuthToken = createSelector([selectAuth], (auth) => {
+//   const isOnboarding =
+//     !!auth.onboardingToken?.token && !auth.accessToken?.token;
+//   if (isOnboarding) return auth.onboardingToken?.token;
+//   return auth.accessToken?.token ?? null;
+// });
+
 export const selectAuthToken = createSelector([selectAuth], (auth) => {
-  if (auth.accessToken?.token) return auth.accessToken.token;
   if (auth.onboardingToken?.token) return auth.onboardingToken.token;
+  if (auth.accessToken?.token) return auth.accessToken.token;
   return null;
 });
 

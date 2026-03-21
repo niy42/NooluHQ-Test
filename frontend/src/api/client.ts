@@ -40,6 +40,7 @@ class ApiClient {
   private initializeInterceptors() {
     this.http.interceptors.request.use((config) => {
       const token = selectAuthToken(store.getState());
+      console.log("Token sent through interceptors: ", token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

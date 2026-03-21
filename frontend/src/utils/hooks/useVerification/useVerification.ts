@@ -98,7 +98,6 @@ export function useVerify(email: string) {
 
   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
     if (verifyUser.isPending) return;
-    console.log(`email from onsubmit : ${email}`);
     verifyUser.mutate({
       code: data.code,
       email,

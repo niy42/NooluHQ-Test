@@ -46,7 +46,7 @@ export async function inviteTeammate(
         sendEmail(
           email,
           "Workspace Invite",
-          `Click to join: http://localhost:5173/invite?token=${tokens[index]}`,
+          `Click to join: https://diag-app.netlify.app/invite?token=${tokens[index]}`,
         ),
       ),
     );

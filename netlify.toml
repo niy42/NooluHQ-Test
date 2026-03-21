@@ -8,7 +8,7 @@
   command = "npm install --legacy-peer-deps && npm run build"
 
   # Netlify Functions folder
-  functions = "frontend/netlify/functions"
+  functions = "netlify/functions"
 
   # Output folder for frontend build
   # Change to "build" if using CRA; keep "dist" if using Vite

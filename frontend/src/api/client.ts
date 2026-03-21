@@ -69,12 +69,12 @@ class ApiClient {
 
     const axiosRequestConfig: AxiosRequestConfig = {
       url: axiosConfig.path,
-      method: axiosConfig.method,
+      method: axiosConfig.method.toLowerCase() as AxiosRequestConfig["method"],
       headers: { ...axiosConfig.headers },
       baseURL: axiosConfig.baseUrl || API_URL,
       responseType: options?.isDownload || options?.isPdf ? "blob" : "json",
-      [axiosConfig.method === ApiMethods.GET ? "params" : "data"]:
-        axiosConfig.data,
+      data: axiosConfig.data,
+      params: axiosConfig.params,
     };
 
     try {

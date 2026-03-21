@@ -22,6 +22,7 @@ export function useVerify(email: string) {
     options: {
       successTitle: "Verification Successful",
       successMessage: "Your email has been verified",
+
       onSuccess: (response: any, helper) => {
         const { onboardingToken, progress } = response;
         helper.dispatch(setOnboardingToken(onboardingToken));
@@ -92,6 +93,7 @@ export function useVerify(email: string) {
 
   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
     if (verifyUser.isPending) return;
+    console.log(`email from onsubmit : ${email}`);
     verifyUser.mutate({
       code: data.code,
       email,
@@ -112,7 +114,9 @@ export function useVerify(email: string) {
     isVerifying: verifyUser.isPending,
     verifyError: verifyUser.error,
 
-    resendCode: () => resendMutation.mutate({ email }),
+    resendCode: () => {
+      (resendMutation.mutate({ email }), console.log(`email: ${email}`));
+    },
     isResending: resendMutation.isPending,
     isVerifySuccess: resendMutation.isSuccess,
     resendError: resendMutation.error,

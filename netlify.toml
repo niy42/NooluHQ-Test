@@ -1,13 +1,27 @@
+# netlify.toml
+
 [build]
+  # Project base folder
   base = "frontend"
-  command = "npm run build"
+
+  # Install dependencies with legacy peer deps, then build
+  command = "npm install --legacy-peer-deps && npm run build"
+
+  # Netlify Functions folder
   functions = "frontend/netlify/functions"
+
+  # Output folder for frontend build
+  # Change to "build" if using CRA; keep "dist" if using Vite
   publish = "dist"
 
 [build.environment]
+  # Match your local Node version to avoid build issues
+  NODE_VERSION = "22"
+
+  # Optional: force npm to use legacy peer deps
   NPM_FLAGS = "--legacy-peer-deps"
 
-# Uncomment to use this redirect for Single Page Applications like create-react-app.
+# Uncomment to use SPA redirect (needed for React Router / Vite SPA)
 # [[redirects]]
 #   from = "/*"
 #   to = "/index.html"

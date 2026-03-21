@@ -13,7 +13,7 @@
     "skipLibCheck": true,
     "strict": true,
     "verbatimModuleSyntax": false,
-    "typeRoots": ["node_modulesx/@types", "./src/types", "./types"],
+    "typeRoots": ["node_modules/@types", "./src/types", "./types"],
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true

@@ -22,7 +22,7 @@
   NPM_FLAGS = "--legacy-peer-deps"
 
 # Uncomment to use SPA redirect (needed for React Router / Vite SPA)
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

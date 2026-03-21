@@ -3,6 +3,7 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { sequelize, connectDb } from "./config/db";
+import { runMigrations } from "./utils/runMigrations";
 import authRoutes from "./routes/auth.route";
 import workspaceRoutes from "./routes/workspace.route";
 import userOnboardingRoutes from "./routes/user.route";
@@ -53,6 +54,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 async function startServer() {
   try {
     await connectDb();
+    await runMigrations();
     await sequelize.sync({
       alter: true,
       force: true,

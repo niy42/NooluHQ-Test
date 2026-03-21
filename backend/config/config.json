@@ -1,0 +1,17 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "./data.sqlite"
+  },
+  "test": {
+    "dialect": "sqlite",
+    "storage": ":memory:"
+  },
+  "production": {
+    "url": "postgresql://postgres:FTBejfJwpdTTCgnHoRwWnQwEzkGUJVXx@autorack.proxy.rlwy.net:44541/railway",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": { "require": true, "rejectUnauthorized": false }
+    }
+  }
+}

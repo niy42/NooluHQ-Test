@@ -10,91 +10,131 @@ import { Resend } from "resend";
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ where: { email } });
-  if (!user)
-    return res.status(400).json({ error: "Invalid email or password" });
-
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword)
-    return res.status(400).json({ error: "Invalid email or password" });
-
-  if (!user.onboardingComplete) {
-    return res.status(403).json({
-      error: "Email not verified. Complete onboarding first.",
-    });
-  }
-
-  const accessToken = generateAccessToken(user.id);
-  const refreshToken = generateRefreshToken(user.id);
+  console.log("LOGIN ATTEMPT:", { email });
 
   try {
-    await sendEmail(
-      email,
-      "Login Alert - Diag App",
-      `<p>You just logged in to your account.</p>`,
-    );
-  } catch (err) {
-    console.error("Email failed:", err);
-  }
+    const user = await User.findOne({ where: { email } });
+    console.log("USER LOOKUP RESULT:", user ? "FOUND" : "NOT FOUND");
 
-  res.json({
-    message: "Login successful",
-    user,
-    accessToken,
-    refreshToken,
-  });
+    if (!user) {
+      console.warn("LOGIN FAILED: User not found", { email });
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    console.log("PASSWORD CHECK:", validPassword ? "VALID" : "INVALID");
+
+    if (!validPassword) {
+      console.warn("LOGIN FAILED: Invalid password", { email });
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    if (!user.onboardingComplete) {
+      console.warn("LOGIN BLOCKED: Onboarding incomplete", { email });
+      return res.status(403).json({
+        error: "Email not verified. Complete onboarding first.",
+      });
+    }
+
+    console.log("GENERATING TOKENS...");
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    try {
+      console.log("SENDING LOGIN EMAIL...");
+      await sendEmail(
+        email,
+        "Login Alert - Diag App",
+        `<p>You just logged in to your account.</p>`,
+      );
+      console.log("LOGIN EMAIL SENT SUCCESSFULLY");
+    } catch (err) {
+      console.error("EMAIL FAILED DURING LOGIN:", err);
+    }
+
+    console.log("LOGIN SUCCESS:", { userId: user.id });
+
+    res.json({
+      message: "Login successful",
+      user,
+      accessToken,
+      refreshToken,
+    });
+  } catch (err) {
+    console.error("LOGIN CONTROLLER ERROR:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
 
 export async function signup(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  const existing = await User.findOne({ where: { email } });
-  if (existing) return res.status(400).json({ error: "Email already exists" });
-
-  const hashed = await bcrypt.hash(password, 10);
-  const otp = generateOtp(6);
-
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-  const newUser = await User.create({
-    email,
-    password: hashed,
-    verificationToken: otp,
-    verificationExpiresAt: expiresAt,
-    currentStep: 1,
-    completedSteps: [],
-    onboardingComplete: false,
-  });
-
-  // const emailText = `Your verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it.`;
-  const emailHtml = `
-    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
-      <h2>Verify your email address</h2>
-      <p>Use this 6-digit code to complete your registration:</p>
-      <h1 style="letter-spacing: 8px; font-size: 32px; font-weight: bold;">${otp}</h1>
-      <p>This code will expire in <strong>10 minutes</strong>.</p>
-      <p>If you didn't request this, ignore this email.</p>
-      <p>— Diag App Team</p>
-    </div>
-  `;
+  console.log("SIGNUP ATTEMPT:", { email });
 
   try {
-    const result = await sendEmail(email, "Verify your email", emailHtml);
+    const existing = await User.findOne({ where: { email } });
+    console.log("EXISTING USER CHECK:", existing ? "EXISTS" : "NEW");
+
+    if (existing) {
+      console.warn("SIGNUP FAILED: Email already exists", { email });
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    console.log("HASHING PASSWORD...");
+    const hashed = await bcrypt.hash(password, 10);
+
+    const otp = generateOtp(6);
+    console.log("OTP GENERATED");
+
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    console.log("CREATING USER...");
+    const newUser = await User.create({
+      email,
+      password: hashed,
+      verificationToken: otp,
+      verificationExpiresAt: expiresAt,
+      currentStep: 1,
+      completedSteps: [],
+      onboardingComplete: false,
+    });
+
+    console.log("USER CREATED:", { userId: newUser.id });
+
+    const emailHtml = `
+      <div>
+        <h2>Verify your email address</h2>
+        <p>Your code:</p>
+        <h1>${otp}</h1>
+      </div>
+    `;
+
+    try {
+      console.log("SENDING VERIFICATION EMAIL...");
+      await sendEmail(email, "Verify your email", emailHtml);
+      console.log("VERIFICATION EMAIL SENT");
+    } catch (err) {
+      console.error("EMAIL FAILED DURING SIGNUP:", err);
+    }
+
+    console.log("GENERATING ONBOARDING TOKEN...");
+    const onboardingToken = jwt.sign(
+      { id: newUser.id, email: newUser.email, purpose: "onboarding" },
+      process.env.JWT_SECRET!,
+      { expiresIn: "24h" },
+    );
+
+    console.log("SIGNUP SUCCESS:", { userId: newUser.id });
+
+    res.json({
+      message: "Check your email for a 6-digit verification code",
+      onboardingToken,
+      email,
+    });
   } catch (err) {
-    console.error("Email failed:", err);
+    console.error("SIGNUP CONTROLLER ERROR:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  const onboardingToken = jwt.sign(
-    { id: newUser.id, email: newUser.email, purpose: "onboarding" },
-    process.env.JWT_SECRET!,
-    { expiresIn: "24h" },
-  );
-
-  res.json({
-    message: "Check your email for a 6-digit verification code",
-    onboardingToken,
-    email,
-  });
 }
 
 export async function verifyEmail(req: Request, res: Response) {

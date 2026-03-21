@@ -7,7 +7,10 @@ export const runMigrations = async () => {
     migrations: {
       glob: "migrations/*.js",
     },
-    context: sequelize.getQueryInterface(),
+    context: {
+      queryInterface: sequelize.getQueryInterface(),
+      Sequelize,
+    },
     storage: new SequelizeStorage({ sequelize }),
     logger: console,
   });

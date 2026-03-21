@@ -12,8 +12,10 @@ export default function PlansChart() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">Top performing plans</p>
-        <span className="text-xs font-medium text-blue-500">THIS MONTH</span>
+        <div className="mb-4 flex w-full items-center justify-between">
+          <p className="text-sm text-gray-500">Top performing plans</p>
+          <span className="text-xs font-medium text-blue-500">THIS MONTH</span>
+        </div>
       </div>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -25,7 +27,12 @@ export default function PlansChart() {
               tickLine={false}
             />
 
-            <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+            <YAxis
+              tick={{ fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+              width={28}
+            />
 
             <Tooltip />
 

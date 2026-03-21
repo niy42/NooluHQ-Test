@@ -64,6 +64,7 @@ interface TokenInfo {
 
 export interface AuthState {
   user: User | null;
+  email: string;
   accessToken: TokenInfo | null;
   onboardingToken: { token: string | null; timestamp: string } | null;
   refreshToken: { token: string | null; timestamp: string } | null;

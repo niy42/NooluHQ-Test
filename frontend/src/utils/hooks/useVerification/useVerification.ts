@@ -3,10 +3,12 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useMutationService } from "../Tanstack/useMutationService";
 import { authServices } from "@/services/auth.services";
 import {
+  selectEmail,
   setOnboardingProgress,
   setOnboardingToken,
 } from "@/redux/store/slices/authSlice";
 import { defaultProgress } from "../useOnboardingProgress/useOnboardingProgress";
+import { useAppSelector } from "@/redux/store/hooks";
 
 export interface VerifyFormValues {
   code: string;
@@ -16,7 +18,7 @@ export function useVerify(email: string) {
   const { control, handleSubmit, setValue, reset } = useForm<VerifyFormValues>({
     defaultValues: { code: "" },
   });
-
+  const emailFromRedux = useAppSelector(selectEmail);
   const verifyUser = useMutationService({
     service: authServices.verifyEmail,
     options: {
@@ -115,7 +117,7 @@ export function useVerify(email: string) {
     verifyError: verifyUser.error,
 
     resendCode: () => {
-      (resendMutation.mutate({ email }), console.log(`email: ${email}`));
+      resendMutation.mutate({ email: emailFromRedux });
     },
     isResending: resendMutation.isPending,
     isVerifySuccess: resendMutation.isSuccess,

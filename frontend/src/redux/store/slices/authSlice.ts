@@ -11,6 +11,7 @@ const initialState: AuthState = {
   user: null,
   accessToken: null,
   onboardingToken: null,
+  email: "",
   onboardingProgress: {
     currentStep: 1,
     completedSteps: [],
@@ -61,6 +62,10 @@ const authSlice = createSlice({
       state.accessToken = null;
     },
 
+    setEmail: (state, action: PayloadAction<string>) => {
+      state.email = action.payload;
+    },
+
     refreshAccessToken: (
       state,
       action: PayloadAction<{ accessToken: string }>,
@@ -70,6 +75,7 @@ const authSlice = createSlice({
         timestamp: new Date().toISOString(),
       };
     },
+
     setOnboardingProgress: (
       state,
       action: PayloadAction<OnboardingProgress>,
@@ -108,6 +114,7 @@ const authSlice = createSlice({
 export const {
   loginSuccess,
   setOnboardingToken,
+  setEmail,
   refreshAccessToken,
   updateUserProfile,
   logoutUser,
@@ -155,6 +162,8 @@ export const selectCompletedSteps = createSelector(
   [selectOnboardingProgress],
   (progress) => progress.completedSteps,
 );
+
+export const selectEmail = createSelector([selectAuth], (auth) => auth.email);
 
 // Returns the most appropriate token to use right now
 export const selectAuthToken = createSelector([selectAuth], (auth) => {

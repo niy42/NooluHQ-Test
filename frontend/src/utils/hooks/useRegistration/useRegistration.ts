@@ -1,7 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useMutationService } from "../Tanstack/useMutationService";
 import { authServices } from "@/services/auth.services";
-import { setOnboardingToken } from "@/redux/store/slices/authSlice";
+import { setEmail, setOnboardingToken } from "@/redux/store/slices/authSlice";
 
 export interface RegisterFormValues {
   name: string;
@@ -34,7 +34,8 @@ export function useRegister() {
           console.warn("No onboarding token received from signup");
           return;
         }
-        const { onboardingToken } = response;
+        const { onboardingToken, email } = response;
+        helpers.dispatch(setEmail(email));
         helpers.dispatch(setOnboardingToken(onboardingToken));
         if (variables) {
           navigate("/verify-email", {

@@ -15,6 +15,7 @@ export interface SignupResponse {
   message: string;
   onboardingToken?: string;
   user: User;
+  [key: string]: any;
 }
 
 export const authServices = {

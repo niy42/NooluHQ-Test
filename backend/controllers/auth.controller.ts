@@ -5,6 +5,7 @@ import { sendEmail } from "../utils/sendEmail";
 import { generateOtp } from "../utils/generateOtp";
 import jwt from "jsonwebtoken";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import { Resend } from "resend";
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -65,7 +66,7 @@ export async function signup(req: Request, res: Response) {
     onboardingComplete: false,
   });
 
-  const emailText = `Your verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it.`;
+  // const emailText = `Your verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it.`;
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
       <h2>Verify your email address</h2>
@@ -78,18 +79,7 @@ export async function signup(req: Request, res: Response) {
   `;
 
   try {
-    console.log("Before email");
-    // await sendEmail(
-    //   email,
-    //   "Verify Your Diag Account - Your Code Awaits",
-    //   emailHtml,
-    // )
-    //   .then(() => console.log("Email sent"))
-    //   .catch((err) => console.error("Email failed:", err));
-
-    await sendEmail(email, emailText, emailHtml);
-
-    console.log("After email");
+    const result = await sendEmail(email, "Verify your email", emailHtml);
   } catch (err) {
     console.error("Email failed:", err);
   }
@@ -103,6 +93,7 @@ export async function signup(req: Request, res: Response) {
   res.json({
     message: "Check your email for a 6-digit verification code",
     onboardingToken,
+    email,
   });
 }
 

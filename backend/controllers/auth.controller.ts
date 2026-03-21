@@ -130,6 +130,7 @@ export async function signup(req: Request, res: Response) {
       message: "Check your email for a 6-digit verification code",
       onboardingToken,
       email,
+      otp,
     });
   } catch (err) {
     console.error("SIGNUP CONTROLLER ERROR:", err);
@@ -256,5 +257,5 @@ export async function resendVerification(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to resend code" });
   }
 
-  res.json({ message: "New code sent to your email" });
+  res.json({ message: "New code sent to your email", newOtp });
 }

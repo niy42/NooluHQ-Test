@@ -90,6 +90,9 @@ export function useVerify(email: string) {
     options: {
       successTitle: "Code Resent",
       successMessage: "A new verification code has been sent",
+      onSuccess: (response: any) => {
+        console.log("NewOtp: ", response.newOtp);
+      },
     },
   });
 

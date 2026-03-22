@@ -35,7 +35,7 @@ export function useRegister() {
           return;
         }
         const { onboardingToken, email, otp } = response;
-        console.log("Otp: ", otp);
+        console.log(`OTP sent to ${email}: `, otp);
         helpers.dispatch(setEmail(email));
         helpers.dispatch(setOnboardingToken(onboardingToken));
         if (variables) {

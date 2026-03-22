@@ -1,69 +1,122 @@
-# React + TypeScript + Vite
+# NooluHQ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for onboarding and workspace management with robust authentication, onboarding flow, and dashboard analytics. Built with React, Redux Toolkit, Redux Persist, and React Router, with a clean modular structure.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Authentication & Onboarding Flow](#authentication--onboarding-flow)
+- [Running the App](#running-the-app)
+- [Available Scripts](#available-scripts)
+- [Contributing](#contributing)
+- [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **User Authentication**
+  - Email signup/login
+  - Token-based authentication with accessToken & onboardingToken
+  - Automatic token expiration handling
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Onboarding Flow**
+  - Multi-step onboarding with progress persistence
+  - Supports continuing onboarding after page refresh
+  - Onboarding tokens protect onboarding pages until full authentication
+
+- **Dashboard & Analytics**
+  - Authenticated routes for dashboard, analytics, reports, settings, and integrations
+  - Role-based access (planned for future versions)
+
+- **State Management**
+  - Redux Toolkit for structured global state
+  - Redux Persist for storing tokens and onboarding progress in localStorage
+  - Custom hooks (`useAuthBootstrap`, `useOnboardingProgress`) to manage auth and onboarding state
+
+- **API Integration**
+  - Axios client with interceptors for automatic token injection
+  - Handles both onboardingToken and accessToken properly
+  - Graceful error handling for 401 and expired tokens
+
+---
+
+## Tech Stack
+
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **State Management**: Redux Toolkit, Redux Persist
+- **Routing**: React Router v6
+- **API Client**: Axios
+- **Hooks**: Custom hooks for auth and onboarding flow
+- **Development Tools**: React Query, Lucide Icons
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 22
+- npm >= 9
+- Optional: Postman or Insomnia for API testing
+
+### Installation
+
+```bash
+git clone <your-repo-url>
+cd <project-folder>
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## OTP Testing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+During development, the app uses **Resend** for email-based OTPs.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+> ⚠️ Note: Resend only allows **one OTP per email at a time**. Therefore, to test multiple users, you must use different emails.
+
+For convenience during development, OTPs are **logged to the browser console**. You can view them in the developer tools:
+
+![Console OTP Screenshot](./src/assets/screenshots/otp-console.png)
+
+**Example:**
+
+```text
+OTP sent to miracle56899@e-record.com: 123456
+
+
+## Technical Notes
+
+### Token Management
+
+- **accessToken** → Full authentication, required for dashboard and authenticated routes.
+- **onboardingToken** → Used during onboarding, allows mid-onboarding route access.
+- Tokens are persisted via **redux-persist** and hydrated automatically on app load.
+
+### Route Protection
+
+- `ProtectedRoute` differentiates between onboarding pages and fully authenticated pages.
+- Onboarding pages are protected with `onboardingToken`.
+- Authenticated pages require a valid `accessToken`.
+
+### API Interceptor
+
+- Axios interceptor injects the correct token (`accessToken` or `onboardingToken`) into requests.
+- Handles token expiration gracefully, avoiding premature logout during onboarding.
+- Logs token usage for debugging.
+
+### Onboarding Progress
+
+- Stored in Redux state (`onboardingProgress`) and synced with backend.
+- Persists on refresh thanks to redux-persist.
+- Supports continuing onboarding from any step.
+
+### OTP Handling
+
+- During development, OTPs are logged to the console instead of sending multiple emails.
+- Resend allows only **one OTP per email at a time**; use different emails to test multiple accounts.
 ```

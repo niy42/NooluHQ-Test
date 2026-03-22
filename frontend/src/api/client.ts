@@ -3,6 +3,7 @@ import { API_URL } from "@/config/env";
 import { store } from "@/redux/store";
 import { ApiMethods } from "./apiMethod";
 import { logoutUser, selectAuthToken } from "@/redux/store/slices/authSlice";
+import { useAppSelector } from "@/redux/store/hooks";
 
 export interface RequestConfig<T = unknown> {
   path: string;
@@ -39,7 +40,8 @@ class ApiClient {
 
   private initializeInterceptors() {
     this.http.interceptors.request.use((config) => {
-      const token = selectAuthToken(store.getState());
+      const token = useAppSelector(selectAuthToken);
+      console.log("Token sent: ", token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

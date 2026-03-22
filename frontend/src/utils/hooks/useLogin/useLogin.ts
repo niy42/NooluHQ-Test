@@ -1,27 +1,15 @@
-import { useMutationService } from "./useMutationService";
+import { useMutationService } from "../Tanstack/useMutationService";
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginSuccess } from "@/redux/store/slices/authSlice";
 import { authServices } from "@/services/auth.services";
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  user: any;
-  accessToken: string;
-  refreshToken: string;
-  message: string;
-}
-
 export const useLogin = () => {
   const dispatch = useAppDispatch();
 
-  return useMutationService<LoginRequest, LoginResponse>({
+  return useMutationService({
     service: authServices.login,
     options: {
-      onSuccess: (response) => {
+      onSuccess: (response: any) => {
         dispatch(
           loginSuccess({
             user: response.user,

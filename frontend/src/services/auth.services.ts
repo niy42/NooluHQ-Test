@@ -14,6 +14,7 @@ export interface SignupResponse {
   status: string;
   message: string;
   onboardingToken?: string;
+  [key: string]: any;
   user: User;
 }
 

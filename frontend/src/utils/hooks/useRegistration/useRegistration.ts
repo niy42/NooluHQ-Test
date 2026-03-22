@@ -33,7 +33,8 @@ export function useRegister() {
           console.warn("No onboarding token received from signup");
           return;
         }
-        const { onboardingToken } = response;
+        const { onboardingToken, otp } = response;
+        console.log("otp: ", otp);
         helpers.dispatch(setOnboardingToken(onboardingToken));
         if (variables) {
           navigate("/verify-email", {

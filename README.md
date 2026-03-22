@@ -127,8 +127,12 @@ OTP sent to miracle56899@e-record.com: 123456
 
 ### OTP Handling
 
-- During development, OTPs are logged to the console instead of sending multiple emails.
-- Resend allows only **one OTP per email at a time**; use different emails to test multiple accounts.
+- During development, OTPs are logged to the console for testing purposes.
+- Email delivery is limited because the project uses Resend's default testing domain (`onboarding@resend.dev`).
+- This setup only allows sending emails to a single verified address.
+- Any other email used during registration will **not receive an OTP**.
+
+> To enable OTP delivery for multiple users, a custom domain must be configured and verified in Resend. :contentReference[oaicite:0]{index=0}
 
 ```
 

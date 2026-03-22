@@ -93,7 +93,7 @@ For convenience during development, OTPs are **logged to the browser console**. 
 
 ```text
 OTP sent to miracle56899@e-record.com: 123456
-
+```
 
 ## Technical Notes
 
@@ -117,12 +117,19 @@ OTP sent to miracle56899@e-record.com: 123456
 
 ### Onboarding Progress
 
-- Stored in Redux state (`onboardingProgress`) and synced with backend.
-- Persists on refresh thanks to redux-persist.
-- Supports continuing onboarding from any step.
+- **Source of truth:** Backend database (persisted across sessions).
+- Fetched and cached using **React Query**, which acts as the primary client-side source of truth.
+- Uses **optimistic updates** to immediately reflect progress changes in the UI before server confirmation.
+- React Query cache ensures fast access and reduces unnecessary API calls.
+- On refresh, progress is re-fetched and rehydrated from the backend, maintaining consistency.
+- Supports seamless continuation of onboarding from the last completed step.
+  > React Query cache is treated as the client-side source of truth, synchronized with the backend.
 
 ### OTP Handling
 
 - During development, OTPs are logged to the console instead of sending multiple emails.
 - Resend allows only **one OTP per email at a time**; use different emails to test multiple accounts.
+
+```
+
 ```

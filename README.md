@@ -123,7 +123,8 @@ OTP sent to miracle56899@e-record.com: 123456
 - React Query cache ensures fast access and reduces unnecessary API calls.
 - On refresh, progress is re-fetched and rehydrated from the backend, maintaining consistency.
 - Supports seamless continuation of onboarding from the last completed step.
-  > React Query cache is treated as the client-side source of truth, synchronized with the backend.
+
+> React Query cache is treated as the client-side source of truth, synchronized with the backend.
 
 ### OTP Handling
 

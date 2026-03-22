@@ -87,7 +87,7 @@ To enable real OTP delivery for multiple users, a custom domain must be configur
 
 For convenience during development, OTPs are **logged to the browser console**. You can view them in the developer tools:
 
-![Console OTP Screenshot](./src/assets/screenshots/otp-console.png)
+![Console OTP Screenshot](./frontend/src/assets/screenshots/otp-console.png)
 
 **Example:**
 

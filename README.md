@@ -77,7 +77,13 @@ npm install
 
 During development, the app uses **Resend** for email-based OTPs.
 
-> ⚠️ Note: Resend only allows **one OTP per email at a time**. Therefore, to test multiple users, you must use different emails.
+⚠️ Note: OTP delivery is limited in this project due to Resend's default testing environment (`onboarding.dev`).
+
+- Emails are only sent to a single verified email address.
+- Any other email used during registration will **not receive an OTP**.
+- For testing purposes, the OTP is logged in the console instead.
+
+To enable real OTP delivery for multiple users, a custom domain must be configured and verified in Resend.
 
 For convenience during development, OTPs are **logged to the browser console**. You can view them in the developer tools:
 

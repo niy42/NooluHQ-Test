@@ -77,7 +77,7 @@ npm install
 
 During development, the app uses **Resend** for email-based OTPs.
 
-⚠️ Note: OTP delivery is limited in this project due to Resend's default testing environment (`onboarding.dev`).
+⚠️ Note: OTP delivery is limited in this project due to Resend's default testing environment (`onboarding@resend.dev`).
 
 - Emails are only sent to a single verified email address.
 - Any other email used during registration will **not receive an OTP**.

@@ -31,6 +31,6 @@ export function useAuthBootstrap() {
     }
     if (onboardingToken) return;
 
-    window.location.href = "/signup";
+    // window.location.href = "/signup";
   }, [accessToken, onboardingToken, rehydrated, dispatch]);
 }

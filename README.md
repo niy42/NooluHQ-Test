@@ -132,7 +132,7 @@ OTP sent to miracle56899@e-record.com: 123456
 - This setup only allows sending emails to a single verified address.
 - Any other email used during registration will **not receive an OTP**.
 
-> To enable OTP delivery for multiple users, a custom domain must be configured and verified in Resend. :contentReference[oaicite:0]{index=0}
+> To enable OTP delivery for multiple users, a custom domain must be configured and verified in Resend.
 
 ```
 

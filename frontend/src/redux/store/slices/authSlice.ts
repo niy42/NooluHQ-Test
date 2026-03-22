@@ -103,7 +103,9 @@ const authSlice = createSlice({
       }
     },
 
-    logoutUser: () => initialState,
+    logoutUser: () => {
+      return initialState;
+    },
 
     clearOnboardingToken: (state) => {
       state.onboardingToken = null;

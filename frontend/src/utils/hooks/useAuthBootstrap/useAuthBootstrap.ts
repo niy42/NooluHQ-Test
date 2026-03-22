@@ -1,8 +1,7 @@
-import { jwtDecode } from "jwt-decode";
-import { logoutUser } from "@/redux/store/slices/authSlice";
-import { selectAccessToken } from "@/redux/store/slices/authSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
+import { logoutUser } from "@/redux/store/slices/authSlice";
+import { jwtDecode } from "jwt-decode";
 
 function isTokenExpired(token: string) {
   try {
@@ -15,11 +14,23 @@ function isTokenExpired(token: string) {
 
 export function useAuthBootstrap() {
   const dispatch = useAppDispatch();
-  const token = useAppSelector(selectAccessToken);
+  const accessToken = useAppSelector((state) => state.auth.accessToken?.token);
+  const onboardingToken = useAppSelector(
+    (state) => state.auth.onboardingToken?.token,
+  );
+  const rehydrated = useAppSelector((state) => state.auth._persist?.rehydrated);
 
   useEffect(() => {
-    if (!token || isTokenExpired(token)) {
-      dispatch(logoutUser());
+    if (!rehydrated) return;
+
+    if (accessToken) {
+      if (isTokenExpired(accessToken)) {
+        dispatch(logoutUser());
+      }
+      return;
     }
-  }, [token, dispatch]);
+    if (onboardingToken) return;
+
+    window.location.href = "/signup";
+  }, [accessToken, onboardingToken, rehydrated, dispatch]);
 }

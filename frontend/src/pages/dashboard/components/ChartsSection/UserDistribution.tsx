@@ -7,7 +7,7 @@ export default function UserDistribution() {
       <p className="mb-4 text-sm text-gray-500">User distribution by country</p>
 
       <div className="h-40">
-        <ResponsiveContainer>
+        <ResponsiveContainer width={"100%"} height={"100%"}>
           <PieChart>
             <Pie
               data={userDistributionData}

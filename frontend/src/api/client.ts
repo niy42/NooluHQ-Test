@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { API_URL } from "@/config/env";
 import { store } from "@/redux/store";
 import { ApiMethods } from "./apiMethod";
-import { logoutUser, selectAuthToken } from "@/redux/store/slices/authSlice";
+import { logoutUser } from "@/redux/store/slices/authSlice";
 
 export interface RequestConfig<T = unknown> {
   path: string;
@@ -39,21 +39,34 @@ class ApiClient {
 
   private initializeInterceptors() {
     this.http.interceptors.request.use((config) => {
-      const token = selectAuthToken(store.getState());
-      console.log("Token sent through interceptors: ", token);
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      const state = store.getState();
+      const accessToken = state.auth.accessToken?.token;
+      const onboardingToken = state.auth.onboardingToken?.token;
+
+      const token = accessToken || onboardingToken;
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+
       return config;
     });
+
     this.http.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 401) {
-          console.warn("[API] Unauthorized - token may be invalid or expired");
+        const state = store.getState();
+        const accessToken = state.auth.accessToken?.token;
+        const onboardingToken = state.auth.onboardingToken?.token;
+        const url = error.config?.url;
+
+        const isOnboarding = !!onboardingToken && !accessToken;
+
+        console.log("Response Error:", url, error.response?.status);
+
+        if (error.response?.status === 401 && accessToken && !isOnboarding) {
+          console.warn("[API] Unauthorized – logging out");
           store.dispatch(logoutUser());
           window.location.href = "/signup";
         }
+
         return Promise.reject(error.response?.data || error.message || error);
       },
     );

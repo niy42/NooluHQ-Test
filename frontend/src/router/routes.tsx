@@ -14,6 +14,7 @@ import Integrations from "@/pages/integrations/integrations";
 import Reports from "@/pages/reports/reports";
 import Users from "@/pages/users/users";
 import LoginForm from "@/pages/auth/Login/Login";
+import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 
 export default function Router() {
   return (
@@ -21,22 +22,99 @@ export default function Router() {
       <Routes>
         <Route path="/" element={<Navigate to="/signup" />} />
         <Route element={<AuthLayout />}>
-          <Route path="/join-us" element={<WhoIsJoining />} />
+          <Route
+            path="/join-us"
+            element={
+              <ProtectedRoute>
+                <WhoIsJoining />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/signup" element={<SignupForm />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/create-workspace" element={<CreateWorkspace />} />
+          <Route
+            path="/verify-email"
+            element={
+              <ProtectedRoute>
+                <VerifyEmail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-workspace"
+            element={
+              <ProtectedRoute>
+                <CreateWorkspace />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/invite-team" element={<InviteTeammates />} />
-          <Route path="/achieve" element={<WhatDoYouWantToAchieve />} />
+          <Route
+            path="/invite-team"
+            element={
+              <ProtectedRoute>
+                <InviteTeammates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/achieve"
+            element={
+              <ProtectedRoute>
+                <WhatDoYouWantToAchieve />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="integrations" element={<Integrations />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="users" element={<Users />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute requireAuth>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute requireAuth>
+                <Analytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute requireAuth>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="integrations"
+            element={
+              <ProtectedRoute requireAuth>
+                <Integrations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <ProtectedRoute requireAuth>
+                <Reports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <ProtectedRoute requireAuth>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -23,6 +23,7 @@ type MutationSuccessHandler<Res, Req> = (
     queryClient: ReturnType<typeof useQueryClient>;
     navigate: ReturnType<typeof useNavigate>;
     dispatch: ReturnType<typeof useAppDispatch>;
+    enqueueSnackbar: ReturnType<typeof useSnackbar>["enqueueSnackbar"];
     variables: Req;
   },
 ) => void;
@@ -149,7 +150,13 @@ export function useMutationService<Service extends ApiService>(
 
     onSuccess: async (response, variables, _context) => {
       if (onSuccess) {
-        onSuccess(response, { queryClient, navigate, dispatch, variables });
+        onSuccess(response, {
+          queryClient,
+          navigate,
+          dispatch,
+          enqueueSnackbar,
+          variables,
+        });
       }
 
       if (invalidateKeys?.length) {

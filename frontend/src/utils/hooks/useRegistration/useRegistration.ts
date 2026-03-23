@@ -36,6 +36,9 @@ export function useRegister() {
         }
         const { onboardingToken, email, otp } = response;
         console.log(`OTP sent to ${email}: `, otp);
+        helpers.enqueueSnackbar(`OTP sent to ${email}: otp`, {
+          variant: "success",
+        });
         helpers.dispatch(setEmail(email));
         helpers.dispatch(setOnboardingToken(onboardingToken));
         if (variables) {

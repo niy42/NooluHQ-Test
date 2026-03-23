@@ -90,7 +90,10 @@ export function useVerify(email: string) {
     options: {
       successTitle: "Code Resent",
       successMessage: "A new verification code has been sent",
-      onSuccess: (response: any) => {
+      onSuccess: (response: any, helper) => {
+        helper.enqueueSnackbar(`New otp sent: ${response.newOtp}`, {
+          variant: "success",
+        });
         console.log("NewOtp: ", response.newOtp);
       },
     },

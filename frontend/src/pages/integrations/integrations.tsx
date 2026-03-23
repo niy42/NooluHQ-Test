@@ -1,3 +1,3 @@
 export default function Integrations() {
-  return <> welcome to Integrations Page</>;
+  return <> Welcome to Integrations Page</>;
 }

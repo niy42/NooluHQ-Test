@@ -9,13 +9,13 @@ export default function Sidebar() {
   const { pathname } = useLocation();
 
   return (
-    <aside className="flex w-56 flex-col bg-white py-4 pl-8">
-      <div className="mb-28 flex items-center gap-2 p-4 text-xl font-semibold">
+    <aside className="flex h-full w-56 flex-col bg-white py-4 pl-8">
+      <div className="mb-16 flex items-center gap-2 p-4 text-xl font-semibold">
         <DiagLogo />
         DIAG
       </div>
 
-      <ul className="space-y-2">
+      <ul className="mb-4 space-y-2">
         {sidebarItems.map((item) => {
           const isActive = pathname === item.path;
 

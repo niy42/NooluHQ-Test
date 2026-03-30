@@ -34,8 +34,8 @@ export function useInvite({ workspaceId }: { workspaceId: string }) {
               success: true,
               progress: {
                 ...defaultProgress,
-                currentStep: 3,
-                completedSteps: [...defaultProgress.completedSteps, 2],
+                currentStep: 4,
+                completedSteps: [...defaultProgress.completedSteps, 3],
                 percentage: Math.min(
                   Math.round(
                     ((defaultProgress.completedSteps.length + 1) /

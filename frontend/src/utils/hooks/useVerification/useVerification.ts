@@ -40,8 +40,8 @@ export function useVerify(email: string) {
               success: true,
               progress: {
                 ...defaultProgress,
-                currentStep: 3,
-                completedSteps: [...defaultProgress.completedSteps, 2],
+                currentStep: 2,
+                completedSteps: [...defaultProgress.completedSteps, 1],
                 percentage: Math.min(
                   Math.round(
                     ((defaultProgress.completedSteps.length + 1) /
